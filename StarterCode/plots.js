@@ -36,17 +36,20 @@ function buildPlot() {
     var metadata = data.metadata[0];
     var otu_ids = data.samples[0].otu_ids.slice(0,10).reverse();
     var sample_values = samples[0].sample_values.slice(0,10).reverse();
-    var otu_labels = samples[0].otu_labels.slice(0,10).map(otu_ids => `OTU ${otu_ids}`).reverse();
+    var otu_labels = samples[0].otu_ids.slice(0,10).map(otu_ids => `OTU ${otu_ids}`).reverse();
     //var dates = data.dataset.data.map(row => row[0]);
      console.log(name);
      console.log(metadata);
      console.log(otu_labels);
 
-    d3.selectAll("#selDataset").on("change", updateSubject)
+    //d3.selectAll("#selDataset").on("change", updateSubject)
+    //var dataset = d3.selectAll("#selDataset");
+    //for(i in name) {dataset.add(new Option(name[i],i));}
 
     var trace1 = {
       type: "bar",
       x: sample_values,
+      y: otu_labels,
       text: otu_ids,
       orientation: "h"
     };
@@ -64,6 +67,33 @@ function buildPlot() {
     };
 
     Plotly.newPlot("bar", barData, layout);
+
+    var trace2 = {
+      x: otu_ids,
+      y: sample_values,
+      mode: 'markers',
+      marker: {
+        size: sample_values,
+        color: otu_ids,
+        text: otu_labels
+      }
+    };
+    
+    var bubbleData = [trace2];
+    
+    var layout1 = {
+      title: 'Bacteria Cultures Per Sample',
+      showlegend: false,
+      height: 600,
+      width: 1000,
+      xaxis: {
+        title: {
+          text: "OTU ID",
+        }
+      }
+    };
+    
+    Plotly.newPlot('bubble', bubbleData, layout1);
 
   });
 }
