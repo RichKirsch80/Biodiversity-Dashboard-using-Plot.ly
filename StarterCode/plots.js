@@ -4,53 +4,65 @@ function unpack(rows, index) {
     return row[index];
   });
 }
-
+function init(){
+  var selector = d3.select("#selDataset");
+  d3.json("samples.json").then((ids)=> {
+    console.log(ids);
+    ids.names.forEach((sample) => {
+      selector.append("option").text(sample).property("value", sample);
+    }
+    );
+  })
+  buildPlot();
+}
+init();
 
 
 function getData() {
 
-  d3.json("samples.json").then(function(data) {
-    var metadata = data.metadata;
-    var id = metadata[0].id; 
-    var ethnicity = metadata[0].ethnicity;
-    var gender = metadata[0].gender;
-    var age = metadata[0].age;
-    var location = metadata[0].location;
-    var bbtype = metadata[0].bbtype;
-    var wfreq = metadata[0].wfreq;
+  d3.json("samples.json").then((items)=> {
+    var metadata = items.metadata[0];
+     console.log(metadata);
+    var subjects = items.names;
+    console.log(subjects);
     var table = d3.select("#sample-metadata");
-    var tbody = table.select("panel-body");
+    table.html("");
+    
+    Object.entries(metadata).forEach(([k, v]) => {
+      table.append("h6").text(`${k}:${v}`)
+
+    });
     
   });
-}
+};
 
 getData();
+
+function optionChanged(selected) {
+  getData(selected);
+  buildPlot(selected);
+}
+
 
 
 function buildPlot() {
 
   d3.json("samples.json").then(function(data) {
-    // Grab values from the response json object to build the plots
     var name = data.names;
     var samples = data.samples;
     var metadata = data.metadata[0];
-    var otu_ids = data.samples[0].otu_ids.slice(0,10).reverse();
-    var sample_values = samples[0].sample_values.slice(0,10).reverse();
-    var otu_labels = samples[0].otu_ids.slice(0,10).map(otu_ids => `OTU ${otu_ids}`).reverse();
-    //var dates = data.dataset.data.map(row => row[0]);
+    var otu_ids = data.samples[0].otu_ids;
+    var sample_values = samples[0].sample_values;
+    var otu_labels = samples[0].otu_ids;
      console.log(name);
      console.log(metadata);
      console.log(otu_labels);
 
-    //d3.selectAll("#selDataset").on("change", updateSubject)
-    //var dataset = d3.selectAll("#selDataset");
-    //for(i in name) {dataset.add(new Option(name[i],i));}
-
     var trace1 = {
       type: "bar",
-      x: sample_values,
-      y: otu_labels,
-      text: otu_ids,
+      x: sample_values.slice(0,10).reverse(),
+      y: otu_labels.slice(0,10).map(otu_ids => `OTU ${otu_ids}`).reverse(),
+      text: otu_ids.slice(0,10).reverse(),
       orientation: "h"
     };
 
@@ -94,6 +106,32 @@ function buildPlot() {
     };
     
     Plotly.newPlot('bubble', bubbleData, layout1);
+
+    var gaugeData = [
+      {
+        domain: { x: [0, 1], y: [0, 1] },
+        value: data.metadata[0].wfreq,
+        title: { text: "Belly Button Washing Frequency"},
+        type: "indicator",
+        mode: "gauge+number",
+        gauge: {
+          axis: { visible: true, range: [0, 9]},
+          steps: [
+            { range: [0, 9], color: "lightblue" }
+          ],
+          threshold: {
+              line: { color: "red", width: 4 },
+              thickness: 0.75,
+              value: data.metadata[0].wfreq
+            } 
+          
+      }
+    }
+    ];
+
+    var layout = { width: 600, height: 500, margin: { t: 0, b: 0 } };
+
+    Plotly.newPlot('gauge', gaugeData, layout);
 
   });
 }
