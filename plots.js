@@ -13,47 +13,76 @@ function init(){
     }
     );
   })
-  buildPlot();
+  buildPlot(940);
+  getData(940);
 }
 init();
 
 
-function getData() {
-
+function getData(sample) {
+  console.log(sample);
   d3.json("samples.json").then((items)=> {
-    var metadata = items.metadata[0];
-     console.log(metadata);
-    var subjects = items.names;
-    console.log(subjects);
+    var metadata = items.metadata;
+    var resultsArray = metadata.filter (s => s.id == sample);
+    var result = resultsArray[0];
+    console.log(result);
+
     var table = d3.select("#sample-metadata");
     table.html("");
     
-    Object.entries(metadata).forEach(([k, v]) => {
+    Object.entries(result).forEach(([k, v]) => {
       table.append("h6").text(`${k}:${v}`)
 
     });
-    
+    var gaugeData = [
+      {
+        domain: { x: [0, 1], y: [0, 1] },
+        value: result.wfreq,
+        title: { text: "Belly Button Washing Frequency"},
+        type: "indicator",
+        mode: "gauge+number",
+        gauge: {
+          axis: { visible: true, range: [0, 9]},
+          steps: [
+            { range: [0, 9], color: "lightblue" }
+          ],
+          threshold: {
+              line: { color: "red", width: 4 },
+              thickness: 0.75,
+              value: result.wfreq
+            } 
+          
+      }
+    }
+    ];
+
+    var layout = { width: 600, height: 500, margin: { t: 0, b: 0 } };
+
+    Plotly.newPlot('gauge', gaugeData, layout);
+
   });
 };
 
-getData();
-
-function optionChanged(selected) {
-  getData(selected);
-  buildPlot(selected);
+function optionChanged(sample) {
+  getData(sample);
+  buildPlot(sample);
 }
 
 
 
-function buildPlot() {
-
+function buildPlot(sample) {
+  console.log(sample);
   d3.json("samples.json").then(function(data) {
     var name = data.names;
     var samples = data.samples;
-    var metadata = data.metadata[0];
-    var otu_ids = data.samples[0].otu_ids;
-    var sample_values = samples[0].sample_values;
-    var otu_labels = samples[0].otu_ids;
+    var metadata = data.metadata;
+
+    
+    var resultsArray2 = samples.filter (sf => sf.id == sample);
+    var result2 = resultsArray2[0];
+    var otu_ids = result2.otu_ids;
+    var sample_values = result2.sample_values;
+    var otu_labels = result2.otu_ids;
      console.log(name);
      console.log(metadata);
      console.log(otu_labels);
@@ -107,33 +136,7 @@ function buildPlot() {
     
     Plotly.newPlot('bubble', bubbleData, layout1);
 
-    var gaugeData = [
-      {
-        domain: { x: [0, 1], y: [0, 1] },
-        value: data.metadata[0].wfreq,
-        title: { text: "Belly Button Washing Frequency"},
-        type: "indicator",
-        mode: "gauge+number",
-        gauge: {
-          axis: { visible: true, range: [0, 9]},
-          steps: [
-            { range: [0, 9], color: "lightblue" }
-          ],
-          threshold: {
-              line: { color: "red", width: 4 },
-              thickness: 0.75,
-              value: data.metadata[0].wfreq
-            } 
-          
-      }
-    }
-    ];
-
-    var layout = { width: 600, height: 500, margin: { t: 0, b: 0 } };
-
-    Plotly.newPlot('gauge', gaugeData, layout);
-
+    
   });
 }
 
-buildPlot();
