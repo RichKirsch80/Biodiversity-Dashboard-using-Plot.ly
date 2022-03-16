@@ -9,6 +9,10 @@ while the rest were relatively rare.
 Used the D3 library to read in samples.json.
 
 Created a horizontal bar chart with a dropdown menu to display the top 10 OTUs found in that individual.
+![image](https://user-images.githubusercontent.com/85321602/158680096-1477717f-acec-4564-9009-1e615fec892a.png)
+![image](https://user-images.githubusercontent.com/85321602/158680126-664c0bb5-32a8-4166-b08d-d55ce8db937d.png)
+![image](https://user-images.githubusercontent.com/85321602/158680185-40f4c2f9-58e8-471d-9185-c4ac5fa73ced.png)
+![image](https://user-images.githubusercontent.com/85321602/158680219-6f8e1f51-e14a-4136-b1ae-a4392d358534.png)
 
 Created a bubble chart that displays each sample. 
 ![image](https://user-images.githubusercontent.com/85321602/158679694-5e9e5730-8acb-4faf-a47e-e07b0a0cf3a0.png)
