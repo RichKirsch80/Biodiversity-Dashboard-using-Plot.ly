@@ -16,7 +16,9 @@ Created a bubble chart that displays each sample.
 ![image](https://user-images.githubusercontent.com/85321602/158679694-5e9e5730-8acb-4faf-a47e-e07b0a0cf3a0.png)
 
 Created Demographic info panel for each individual selected.
+
 ![image](https://user-images.githubusercontent.com/85321602/158680096-1477717f-acec-4564-9009-1e615fec892a.png)
+
 
 Created gauge for each individual selected based on frequency of belly button washing.
 ![image](https://user-images.githubusercontent.com/85321602/158680185-40f4c2f9-58e8-471d-9185-c4ac5fa73ced.png)
