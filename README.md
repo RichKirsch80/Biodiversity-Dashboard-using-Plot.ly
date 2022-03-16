@@ -11,6 +11,7 @@ Used the D3 library to read in samples.json.
 Created a horizontal bar chart with a dropdown menu to display the top 10 OTUs found in that individual.
 
 Created a bubble chart that displays each sample. 
+![image](https://user-images.githubusercontent.com/85321602/158679694-5e9e5730-8acb-4faf-a47e-e07b0a0cf3a0.png)
 
 Created Demographic info panel for each individual selected.
 
